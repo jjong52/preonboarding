@@ -6,7 +6,7 @@ import io.sparta.auth.domain.Role;
 import io.sparta.auth.domain.User;
 import io.sparta.auth.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserResponse signUp(SignUpRequest signUpRequest) {
@@ -25,7 +25,7 @@ public class UserService {
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
         }
 
-        String encodedPassword = bCryptPasswordEncoder.encode(password);
+        String encodedPassword = passwordEncoder.encode(password);
         User user = User.of(username, encodedPassword, signUpRequest.nickname(), Role.USER);
 
         userRepository.save(user);
